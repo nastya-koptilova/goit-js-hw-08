@@ -1,5 +1,6 @@
 import Player from '@vimeo/player';
 import throttle from 'lodash.throttle';
+import localStorageService from './localstorage.js';
 
 const player = new Player('vimeo-player', {
   id: 'vimeo-player',
@@ -7,22 +8,10 @@ const player = new Player('vimeo-player', {
 
 const onPlay = function (data) {
   const { seconds } = data;
-  try {
-    localStorage.setItem('videoplayer-current-time', JSON.stringify(seconds));
-  } catch (error) {
-    console.error('Set state error: ', error.message);
-  }
+  localStorageService.save('videoplayer-current-time', seconds);
 };
 
-const onPause = () => {
-  try {
-    const stopTime = localStorage.getItem('videoplayer-current-time');
-
-    return stopTime === null ? undefined : JSON.parse(stopTime);
-  } catch (error) {
-    console.error('Get state error: ', error.message);
-  }
-};
+const onPause = () => localStorageService.load('videoplayer-current-time');
 
 player.setCurrentTime(onPause());
 
