@@ -11,8 +11,13 @@ const onPlay = function (data) {
   localStorageService.save('videoplayer-current-time', seconds);
 };
 
-const onPause = () => localStorageService.load('videoplayer-current-time');
+const onPause = () => {
+  if (localStorageService.load('videoplayer-current-time') === undefined) {
+    return;
+  }
+  player.setCurrentTime(localStorageService.load('videoplayer-current-time'));
+};
 
-player.setCurrentTime(onPause());
+onPause();
 
 player.on('timeupdate', throttle(onPlay, 1000));
