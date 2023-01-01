@@ -2,7 +2,7 @@ import throttle from 'lodash.throttle';
 import localStorageService from './localstorage.js';
 
 const feedbackFormEl = document.querySelector('.feedback-form');
-const userFeedback = {};
+let userFeedback = {};
 
 const onFeedbackFormLoad = () => {
   const storageData = localStorageService.load('feedback-form-state');
@@ -12,6 +12,7 @@ const onFeedbackFormLoad = () => {
   }
 
   for (const prop in storageData) {
+    userFeedback[prop] = storageData[prop];
     feedbackFormEl.elements[prop].value = storageData[prop];
   }
 };
@@ -34,6 +35,7 @@ const onFeedbackFormSubmit = event => {
   console.log(localStorageService.load('feedback-form-state'));
   feedbackFormEl.reset();
   localStorageService.remove('feedback-form-state');
+  userFeedback = {};
 };
 
 feedbackFormEl.addEventListener('input', throttle(onFeedbackFormInput, 500));
